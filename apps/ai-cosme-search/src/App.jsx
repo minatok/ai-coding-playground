@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import './App.css';
+import productThumbnail from '../sunscreen.png';
 
 const SCREENS = {
   SEARCH: 'screen0',
@@ -8,6 +9,7 @@ const SCREENS = {
   QUESTION_SPF: 'screen3',
   FILTERED_RESULTS: 'screen4',
   PRODUCT_DETAIL: 'screen5',
+  SKIN_DIAGNOSIS: 'screen6',
 };
 
 const POPULAR_KEYWORDS = ['日焼け止め', 'ファンデーション', '化粧水', 'リップ'];
@@ -90,6 +92,11 @@ const DETAIL = {
     '多くのユーザーが手を汚さず塗れる便利さを高く評価しています。白浮きしにくく、ベタつかないさらっとした使用感が好評。化粧の上からも使えるため、塗り直しが簡単という声も多数。一方で、容量が少なめという意見もありますが、携帯性に優れ総合的に満足度の高い商品です。',
 };
 
+const getProductById = (productId) =>
+  RECOMMENDATIONS.find((product) => product.id === productId) || (DETAIL.id === productId ? DETAIL : null);
+
+const getAllProductIds = () => [...new Set([...RECOMMENDATIONS.map((product) => product.id), DETAIL.id])];
+
 const SHAPE_OPTIONS = [
   { title: 'スティックタイプ', subtitle: '手を汚さず塗れる' },
   { title: 'ジェルタイプ', subtitle: 'さっぱり軽い' },
@@ -103,18 +110,117 @@ const SPF_OPTIONS = [
   { title: 'SPF30以下', subtitle: '軽めの保護' },
 ];
 
-const PLACEHOLDER_SVG =
-  "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect fill='%23f0f0f0' width='100' height='100'/%3E%3Ctext x='50' y='50' font-size='40' text-anchor='middle' dominant-baseline='middle'%3E%E2%98%80%EF%B8%8F%3C/text%3E%3C/svg%3E";
+const createInitialMatchStatus = () => {
+  const initialStatus = {};
+  getAllProductIds().forEach((productId) => {
+    initialStatus[productId] = { status: 'idle', score: null, error: null };
+  });
+  return initialStatus;
+};
+
+const SKIN_DIAGNOSIS_DELAY_MS = 1000;
+
+// TODO: Perfect社の肌診断API接続時に置き換える
+const runMockSkinDiagnosis = (productId) =>
+  new Promise((resolve, reject) => {
+    setTimeout(() => {
+      const recommendation = RECOMMENDATIONS.find((product) => product.id === productId);
+      if (recommendation) {
+        resolve(recommendation.matchScore);
+        return;
+      }
+
+      if (DETAIL.id === productId) {
+        resolve(DETAIL.matchScore);
+        return;
+      }
+
+      reject(new Error('診断に失敗しました'));
+    }, SKIN_DIAGNOSIS_DELAY_MS);
+  });
 
 export default function App() {
   const [activeScreen, setActiveScreen] = useState(SCREENS.SEARCH);
   const [searchQuery, setSearchQuery] = useState('日焼け止め');
+  const [matchStatus, setMatchStatus] = useState(() => createInitialMatchStatus());
+  const [diagnosisContext, setDiagnosisContext] = useState({ productId: null, sourceScreen: null });
+  const [diagnosisStage, setDiagnosisStage] = useState('idle');
 
   const isActive = (screenId) => activeScreen === screenId;
+  const getDiagnosisState = (productId) => matchStatus[productId] ?? { status: 'idle', score: null, error: null };
 
   const goToScreen = (screenId) => {
     setActiveScreen(screenId);
     window.scrollTo(0, 0);
+  };
+
+  const startDiagnosis = (productId) => {
+    setDiagnosisContext({ productId, sourceScreen: activeScreen });
+    setDiagnosisStage('camera');
+    setMatchStatus((previous) => ({
+      ...previous,
+      [productId]: previous[productId]?.status === 'success' ? previous[productId] : { status: 'idle', score: null, error: null },
+    }));
+    goToScreen(SCREENS.SKIN_DIAGNOSIS);
+  };
+
+  const handleCapturePhoto = async () => {
+    const { productId } = diagnosisContext;
+    if (!productId) {
+      return;
+    }
+
+    setDiagnosisStage('loading');
+    setMatchStatus((previous) => ({
+      ...previous,
+      [productId]: { status: 'loading', score: null, error: null },
+    }));
+
+    try {
+      const score = await runMockSkinDiagnosis(productId);
+      setMatchStatus((previous) => {
+        const updated = { ...previous };
+        getAllProductIds().forEach((id) => {
+          const productInfo = getProductById(id);
+          updated[id] = {
+            status: 'success',
+            score: productInfo?.matchScore ?? score,
+            error: null,
+          };
+        });
+        return updated;
+      });
+      setDiagnosisStage('success');
+      setTimeout(() => exitDiagnosisScreen(), 600);
+    } catch (error) {
+      setMatchStatus((previous) => ({
+        ...previous,
+        [productId]: { status: 'error', score: null, error: error.message },
+      }));
+      setDiagnosisStage('error');
+    }
+  };
+
+  const exitDiagnosisScreen = ({ resetError = false } = {}) => {
+    const { sourceScreen, productId } = diagnosisContext;
+    const targetScreen = sourceScreen ?? SCREENS.FILTERED_RESULTS;
+
+    if (resetError && productId) {
+      setMatchStatus((previous) => {
+        const current = previous[productId];
+        if (!current || current.status !== 'error') {
+          return previous;
+        }
+        return {
+          ...previous,
+          [productId]: { status: 'idle', score: null, error: null },
+        };
+      });
+    }
+
+    setDiagnosisContext({ productId: null, sourceScreen: null });
+    setDiagnosisStage('idle');
+    goToScreen(targetScreen);
   };
 
   const handleSearch = () => {
@@ -125,6 +231,9 @@ export default function App() {
     setSearchQuery(keyword);
     goToScreen(SCREENS.RESULTS);
   };
+
+  const detailDiagnosis = getDiagnosisState(DETAIL.id);
+  const currentDiagnosisProduct = getProductById(diagnosisContext.productId);
 
   return (
     <div className="app">
@@ -210,7 +319,7 @@ export default function App() {
                 onClick={() => goToScreen(SCREENS.PRODUCT_DETAIL)}
               >
                 <div className="product-list-image">
-                  <img src={PLACEHOLDER_SVG} alt="商品" />
+                  <img src={productThumbnail} alt="商品" />
                 </div>
                 <div className="product-list-info">
                   <div className="product-list-name">{product.name}</div>
@@ -336,42 +445,71 @@ export default function App() {
             <div className="result-title">あなたにぴったりな2選！</div>
           </div>
 
-          {RECOMMENDATIONS.map((product) => (
-            <button
-              key={product.id}
-              type="button"
-              className="product-card-result"
-              onClick={() => goToScreen(SCREENS.PRODUCT_DETAIL)}
-            >
-              <div className="product-header">
-                <div className="product-image-small" role="img" aria-label="sun">
-                  ☀️
-                </div>
-                <div className="product-details">
-                  <div className="product-name">{product.name}</div>
-                  <div className="stars">{product.rating}</div>
-                  <div className="product-price">{product.price}</div>
-                </div>
-              </div>
+          {RECOMMENDATIONS.map((product) => {
+            const diagnosis = getDiagnosisState(product.id);
+            const isSuccess = diagnosis.status === 'success';
 
-              <div className="match-score">
-                <div className="match-score-label">AIマッチスコア</div>
-                <div className="match-score-value">{product.matchScore}</div>
-                <div className="match-reasons">
-                  {product.reasons.map((reason) => (
-                    <span key={reason} className="match-reason">
-                      {reason}
-                    </span>
-                  ))}
+            const handleCardClick = () => {
+              goToScreen(SCREENS.PRODUCT_DETAIL);
+            };
+
+            const handleKeyDown = (event) => {
+              if (event.key === 'Enter' || event.key === ' ') {
+                event.preventDefault();
+                goToScreen(SCREENS.PRODUCT_DETAIL);
+              }
+            };
+
+            return (
+              <div key={product.id} className="product-card-result" role="button" tabIndex={0} onClick={handleCardClick} onKeyDown={handleKeyDown}>
+                <div className="product-card-content">
+                  <div className="product-header">
+                    <div className="product-image-small">
+                      <img src={productThumbnail} alt={`${product.name} 商品画像`} />
+                    </div>
+                    <div className="product-details">
+                      <div className="product-name">{product.name}</div>
+                      <div className="stars">{product.rating}</div>
+                      <div className="product-price">{product.price}</div>
+                    </div>
+                  </div>
+
+                  {isSuccess ? (
+                    <div className="match-score">
+                      <div className="match-score-label">AIマッチスコア</div>
+                      <div className="match-score-value">{diagnosis.score}</div>
+                    </div>
+                  ) : (
+                    <div className="diagnosis-action">
+                      <button
+                        type="button"
+                        className="btn btn-primary"
+                        onClick={(event) => {
+                          event.stopPropagation();
+                          startDiagnosis(product.id);
+                        }}
+                      >
+                        相性チェック
+                      </button>
+                    </div>
+                  )}
+
+                  <div className="match-reasons">
+                    {product.reasons.map((reason) => (
+                      <span key={reason} className="match-reason">
+                        {reason}
+                      </span>
+                    ))}
+                  </div>
+
+                  <div className="review-summary">
+                    <div className="review-summary-title">レビューをまとめると...</div>
+                    <div className="review-summary-text">{product.reviewSummary}</div>
+                  </div>
                 </div>
               </div>
-
-              <div className="review-summary">
-                <div className="review-summary-title">レビューをまとめると...</div>
-                <div className="review-summary-text">{product.reviewSummary}</div>
-              </div>
-            </button>
-          ))}
+            );
+          })}
         </div>
       </div>
 
@@ -387,30 +525,45 @@ export default function App() {
 
         <div className="content">
           <div className="detail-hero">
-            <div className="detail-image" role="img" aria-label="sun">
-              ☀️
+            <div className="detail-image">
+              <img src={productThumbnail} alt={`${DETAIL.name} 商品画像`} />
             </div>
             <div className="detail-name">{DETAIL.name}</div>
             <div className="detail-price">{DETAIL.price}</div>
           </div>
 
-          <div className="match-score detail-match-score">
-            <div className="match-score-label">あなたにぴったり！</div>
-            <div className="detail-score-row">
-              <div className="match-score-label">AIマッチスコア</div>
-              <div className="match-score-value">{DETAIL.matchScore}</div>
+          <div className="detail-diagnosis-container">
+            <div className="match-score detail-match-score">
+              <div className="match-score-label">あなたにぴったり！</div>
+              {detailDiagnosis.status === 'success' ? (
+                <div className="detail-score-row">
+                  <div className="match-score-label">AIマッチスコア</div>
+                  <div className="match-score-value">{detailDiagnosis.score}</div>
+                </div>
+              ) : (
+                <div className="detail-diagnosis-action">
+                  <button
+                    type="button"
+                    className="btn btn-primary"
+                    onClick={() => startDiagnosis(DETAIL.id)}
+                  >
+                    相性チェック
+                  </button>
+                </div>
+              )}
+              <div className="match-reasons">
+                {DETAIL.reasons.map((reason) => (
+                  <span key={reason} className="match-reason">
+                    {reason}
+                  </span>
+                ))}
+              </div>
+              <div className="detail-summary">
+                <div className="detail-summary-title">あなたにおすすめの理由</div>
+                <p>{DETAIL.summary}</p>
+              </div>
             </div>
-            <div className="match-reasons">
-              {DETAIL.reasons.map((reason) => (
-                <span key={reason} className="match-reason">
-                  {reason}
-                </span>
-              ))}
-            </div>
-            <div className="detail-summary">
-              <div className="detail-summary-title">あなたにおすすめの理由</div>
-              <p>{DETAIL.summary}</p>
-            </div>
+
           </div>
 
           <div className="detail-points">
@@ -427,7 +580,88 @@ export default function App() {
             <div className="review-summary-text">{DETAIL.reviewSummary}</div>
           </div>
 
-          <button className="btn btn-primary btn-full">カートに追加</button>
+          <button className="btn btn-primary btn-full">商品情報を詳しく見る</button>
+        </div>
+      </div>
+
+      <div
+        className={`screen diagnosis-screen${isActive(SCREENS.SKIN_DIAGNOSIS) ? ' active' : ''}`}
+        id={SCREENS.SKIN_DIAGNOSIS}
+      >
+        <div className="header">
+          <button
+            className="header-link"
+            onClick={() => exitDiagnosisScreen({ resetError: true })}
+            disabled={diagnosisStage === 'loading'}
+          >
+            ← 戻る
+          </button>
+          <div className="header-icon" role="img" aria-label="camera">
+            📷
+          </div>
+        </div>
+
+        <div className="content diagnosis-content">
+          {currentDiagnosisProduct ? (
+            <>
+              <div className="diagnosis-product-name">{currentDiagnosisProduct.name}</div>
+
+              {diagnosisStage === 'camera' && (
+                <div className="diagnosis-camera">
+                  <div className="camera-frame" role="img" aria-label="カメラプレビュー">
+                    📸
+                  </div>
+                  <div className="diagnosis-instruction">
+                    顔全体が映るようにカメラに向かってください。準備ができたら撮影ボタンを押してください。
+                  </div>
+                  <button type="button" className="btn btn-primary" onClick={handleCapturePhoto}>
+                    撮影する
+                  </button>
+                </div>
+              )}
+
+              {diagnosisStage === 'loading' && (
+                <div className="diagnosis-loading" aria-live="polite">
+                  <div className="diagnosis-text">診断中…</div>
+                  <div className="running-cat" role="img" aria-label="走る子猫">
+                    🐈
+                  </div>
+                </div>
+              )}
+
+              {diagnosisStage === 'success' && (
+                <div className="diagnosis-complete" aria-live="polite">
+                  <div className="diagnosis-text">診断結果を表示しています…</div>
+                </div>
+              )}
+
+              {diagnosisStage === 'error' && (
+                <div className="diagnosis-error" aria-live="polite">
+                  <div className="diagnosis-text">失敗しました</div>
+                  <button
+                    type="button"
+                    className="btn btn-secondary"
+                    onClick={() => exitDiagnosisScreen({ resetError: true })}
+                  >
+                    戻る
+                  </button>
+                </div>
+              )}
+
+              {diagnosisStage === 'idle' && (
+                <div className="diagnosis-placeholder">
+                  <div className="diagnosis-text">診断を開始してください</div>
+                </div>
+              )}
+            </>
+          ) : (
+            <div className="diagnosis-placeholder">
+              <div className="diagnosis-text">診断対象の商品が選択されていません</div>
+              <button type="button" className="btn btn-secondary" onClick={() => goToScreen(SCREENS.FILTERED_RESULTS)}>
+                商品一覧へ戻る
+              </button>
+            </div>
+          )}
         </div>
       </div>
     </div>
