@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Heart, Share2, Star, ChevronDown, MapPin, Truck } from 'lucide-react';
-import powderImage from '../powder.png';
+import powderImage from '../powder.svg';
 
 const colors = [
   { id: '00', name: 'Translucent', hex: '#F5F5F5' },
