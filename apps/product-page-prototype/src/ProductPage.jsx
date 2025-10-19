@@ -90,16 +90,14 @@ export default function ProductPage() {
         </div>
       </div>
 
-      <div className="relative flex aspect-[4/3] items-center justify-center bg-white">
-        <div className="flex h-full w-full items-center justify-center bg-white">
-          <div className="text-center">
-            <div className="mx-auto mb-4 flex h-56 w-56 items-center justify-center">
-              <img src={powderImage} alt="ルースパウダーのパッケージ" className="h-full w-full object-contain" />
-            </div>
-            <p className="text-xs text-gray-400">1/12</p>
+      <div className="relative bg-white px-6 pt-6 pb-4">
+        <div className="text-center">
+          <div className="mx-auto flex h-48 w-48 items-center justify-center">
+            <img src={powderImage} alt="ルースパウダーのパッケージ" className="h-full w-full object-contain" />
           </div>
+          <p className="mt-3 text-xs text-gray-400">1/12</p>
         </div>
-        <div className="absolute right-3 top-3 rounded bg-white px-2 py-1 text-xs font-semibold text-pink-600 shadow">
+        <div className="absolute right-4 top-4 rounded bg-white px-2 py-1 text-xs font-semibold text-pink-600 shadow">
           リニューアル
         </div>
       </div>
