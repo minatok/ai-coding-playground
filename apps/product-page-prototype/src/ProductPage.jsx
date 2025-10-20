@@ -77,57 +77,57 @@ export default function ProductPage() {
   );
 
   return (
-    <div className="min-h-screen bg-[#dbf1f0] pb-20 text-[#233838]">
-      <div className="sticky top-0 z-10 flex items-center justify-between border-b bg-[#f3f4f4] px-4 py-3">
+    <div className="min-h-screen bg-gray-50 pb-20">
+      <div className="sticky top-0 z-10 flex items-center justify-between border-b bg-white px-4 py-3">
         <h1 className="text-sm font-semibold">商品詳細</h1>
         <div className="flex gap-4">
-          <Share2 size={20} className="cursor-pointer text-[#798989]" />
+          <Share2 size={20} className="cursor-pointer text-gray-600" />
           <Heart
             size={20}
-            className={`cursor-pointer transition ${liked ? 'fill-[#ff3333] text-[#ff3333]' : 'text-[#798989]'}`}
+            className={`cursor-pointer transition ${liked ? 'fill-red-500 text-red-500' : 'text-gray-600'}`}
             onClick={() => setLiked((prev) => !prev)}
           />
         </div>
       </div>
 
-      <div className="relative bg-[#f3f4f4] px-6 pt-6 pb-4">
+      <div className="relative bg-white px-6 pt-6 pb-4">
         <div className="text-center">
           <div className="mx-auto flex h-48 w-48 items-center justify-center">
             <img src={powderImage} alt="ルースパウダーのパッケージ" className="h-full w-full object-contain" />
           </div>
-          <p className="mt-3 text-xs text-[#b8bfbf]">1/12</p>
+          <p className="mt-3 text-xs text-gray-400">1/12</p>
         </div>
-        <div className="absolute right-4 top-4 rounded bg-[#f3f4f4] px-2 py-1 text-xs font-semibold text-[#2eb6aa] shadow">
+        <div className="absolute right-4 top-4 rounded bg-white px-2 py-1 text-xs font-semibold text-pink-600 shadow">
           リニューアル
         </div>
       </div>
 
-      <div className="border-b bg-[#f3f4f4] px-4 py-4">
+      <div className="border-b bg-white px-4 py-4">
         <div className="mb-3 flex items-start justify-between">
           <div>
-            <p className="mb-1 text-xs text-[#99A3A3]">コスメデコルテ</p>
+            <p className="mb-1 text-xs text-gray-500">コスメデコルテ</p>
             <h2 className="text-lg font-bold">ルース パウダー</h2>
           </div>
-          <div className="flex items-center gap-1 rounded bg-[#a5deda] px-2 py-1">
-            <Star size={14} className="fill-[#aa8800] text-[#aa8800]" />
+          <div className="flex items-center gap-1 rounded bg-yellow-50 px-2 py-1">
+            <Star size={14} className="fill-yellow-400 text-yellow-400" />
             <span className="text-xs font-semibold">4.8</span>
           </div>
         </div>
-        <p className="text-xs text-[#99A3A3]">¥8,250 (税込)</p>
-        <p className="mt-2 text-xs text-[#b8bfbf]">クチコミ数: 8,463 件</p>
+        <p className="text-xs text-gray-500">¥8,250 (税込)</p>
+        <p className="mt-2 text-xs text-gray-400">クチコミ数: 8,463 件</p>
       </div>
 
-      <div className="border-b bg-[#f3f4f4] px-4 py-4">
-        <p className="mb-3 text-xs font-semibold text-[#556666]">今すぐ買える！</p>
-        <button className="mb-2 w-full rounded-lg bg-[#2eb6aa] py-3 text-sm font-semibold text-white transition hover:bg-[#00a699]">
+      <div className="border-b bg-white px-4 py-4">
+        <p className="mb-3 text-xs font-semibold text-gray-700">今すぐ買える！</p>
+        <button className="mb-2 w-full rounded-lg bg-pink-500 py-3 text-sm font-semibold text-white">
           @cosme公式通販
         </button>
-        <button className="w-full rounded-lg bg-[#ccd1d1] py-3 text-sm font-semibold text-[#556666] transition hover:bg-[#a5deda]">
+        <button className="w-full rounded-lg bg-gray-100 py-3 text-sm font-semibold text-gray-700">
           @cosme STORE
         </button>
       </div>
 
-      <div className="border-b bg-[#f3f4f4] px-4 py-3">
+      <div className="border-b bg-white px-4 py-3">
         <p className="mb-2 text-sm font-semibold">色選択</p>
         <div className="grid grid-cols-5 gap-2">
           {colors.map((color) => (
@@ -135,25 +135,25 @@ export default function ProductPage() {
               key={color.id}
               onClick={() => setSelectedColor(color.id)}
               className={`h-10 rounded-md border-2 transition ${
-                selectedColor === color.id ? 'border-[#2eb6aa] ring-2 ring-[#a5deda]' : 'border-[#e6e9e9]'
+                selectedColor === color.id ? 'border-pink-500 ring-2 ring-pink-300' : 'border-gray-200'
               }`}
               style={{ backgroundColor: color.hex }}
               title={color.name}
               type="button"
             >
-              <span className="text-xs font-semibold text-[#798989]">{color.id}</span>
+              <span className="text-xs font-semibold text-gray-600">{color.id}</span>
             </button>
           ))}
         </div>
-        <p className="mt-2 text-xs text-[#99A3A3]">{colors.find((color) => color.id === selectedColor)?.name}</p>
+        <p className="mt-2 text-xs text-gray-500">{colors.find((color) => color.id === selectedColor)?.name}</p>
       </div>
 
-      <div className="border-b bg-[#f3f4f4] px-4 py-4">
+      <div className="border-b bg-white px-4 py-4">
         <p className="mb-3 text-sm font-semibold">数量</p>
         <div className="mb-4 flex items-center gap-3">
           <button
             onClick={() => setQuantity((value) => Math.max(1, value - 1))}
-            className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#d9dddd]"
+            className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-300"
             type="button"
           >
             −
@@ -161,35 +161,35 @@ export default function ProductPage() {
           <span className="w-8 text-center text-lg font-semibold">{quantity}</span>
           <button
             onClick={() => setQuantity((value) => value + 1)}
-            className="flex h-10 w-10 items-center justify-center rounded-lg border border-[#d9dddd]"
+            className="flex h-10 w-10 items-center justify-center rounded-lg border border-gray-300"
             type="button"
           >
             +
           </button>
         </div>
-        <button className="w-full rounded-lg bg-[#2eb6aa] py-3 text-sm font-semibold text-white transition hover:bg-[#00a699]">
+        <button className="w-full rounded-lg bg-gradient-to-r from-pink-500 to-purple-500 py-3 text-sm font-semibold text-white">
           カートに追加
         </button>
       </div>
 
-      <div className="space-y-3 border-b bg-[#f3f4f4] px-4 py-4">
+      <div className="space-y-3 border-b bg-white px-4 py-4">
         <div className="flex items-start gap-3">
-          <Truck size={18} className="mt-1 text-[#798989]" />
+          <Truck size={18} className="mt-1 text-gray-600" />
           <div>
-            <p className="text-xs font-semibold text-[#556666]">送料無料</p>
-            <p className="text-xs text-[#99A3A3]">¥3,000以上のお買い上げで送料無料</p>
+            <p className="text-xs font-semibold text-gray-700">送料無料</p>
+            <p className="text-xs text-gray-500">¥3,000以上のお買い上げで送料無料</p>
           </div>
         </div>
         <div className="flex items-start gap-3">
-          <MapPin size={18} className="mt-1 text-[#798989]" />
+          <MapPin size={18} className="mt-1 text-gray-600" />
           <div>
-            <p className="text-xs font-semibold text-[#556666]">店舗受取可能</p>
-            <p className="text-xs text-[#99A3A3]">全国20店舗以上で受け取り可能</p>
+            <p className="text-xs font-semibold text-gray-700">店舗受取可能</p>
+            <p className="text-xs text-gray-500">全国20店舗以上で受け取り可能</p>
           </div>
         </div>
       </div>
 
-      <div className="border-b bg-[#f3f4f4] px-4 py-4">
+      <div className="border-b bg-white px-4 py-4">
         <button
           onClick={() => toggleSection('description')}
           className="flex w-full items-center justify-between"
@@ -199,7 +199,7 @@ export default function ProductPage() {
           <ChevronDown size={20} className={`transition ${expandedSection === 'description' ? 'rotate-180' : ''}`} />
         </button>
         {expandedSection === 'description' && (
-          <div className="mt-3 space-y-2 text-xs text-[#556666]">
+          <div className="mt-3 space-y-2 text-xs text-gray-700">
             <p>肌の上で光を調合し、5つの質感が素肌そのものを美しく魅せ、上品で澄んだ仕上がりが持続する光フェイスパウダーです。</p>
             <p className="mt-3 font-semibold">ポイント</p>
             <ul className="list-disc space-y-1 pl-4">
@@ -212,7 +212,7 @@ export default function ProductPage() {
         )}
       </div>
 
-      <div className="border-b bg-[#f3f4f4] px-4 py-4">
+      <div className="border-b bg-white px-4 py-4">
         <button
           onClick={() => toggleSection('usage')}
           className="flex w-full items-center justify-between"
@@ -222,7 +222,7 @@ export default function ProductPage() {
           <ChevronDown size={20} className={`transition ${expandedSection === 'usage' ? 'rotate-180' : ''}`} />
         </button>
         {expandedSection === 'usage' && (
-          <div className="mt-3 space-y-2 text-xs text-[#556666]">
+          <div className="mt-3 space-y-2 text-xs text-gray-700">
             <p>• ベースメイクアップの最後の仕上げにお使いください。</p>
             <p>• 中ぶたにパフをあて、容器を逆さにしてパウダーをとります。</p>
             <p>• 手の甲でつき具合をみてから、軽くらせんを描くように肌にのばします。</p>
@@ -230,21 +230,21 @@ export default function ProductPage() {
         )}
       </div>
 
-      <div className="border-b bg-gradient-to-r from-[#dbf1f0] to-[#a5deda] px-4 py-4">
+      <div className="border-b bg-gradient-to-r from-pink-50 to-purple-50 px-4 py-4">
         <h3 className="mb-3 text-sm font-semibold">クチコミの傾向</h3>
 
         <div className="mb-4 flex gap-4 text-xs">
           <div className="text-center">
-            <p className="text-base font-semibold text-[#233838]">88%</p>
-            <p className="mt-0.5 text-[#99A3A3]">肯定的</p>
+            <p className="text-base font-semibold text-gray-800">88%</p>
+            <p className="mt-0.5 text-gray-500">肯定的</p>
           </div>
-          <div className="border-l border-r border-[#e6e9e9] px-4 text-center">
-            <p className="text-base font-semibold text-[#233838]">8%</p>
-            <p className="mt-0.5 text-[#99A3A3]">中立</p>
+          <div className="border-l border-r border-gray-200 px-4 text-center">
+            <p className="text-base font-semibold text-gray-800">8%</p>
+            <p className="mt-0.5 text-gray-500">中立</p>
           </div>
           <div className="text-center">
-            <p className="text-base font-semibold text-[#233838]">4%</p>
-            <p className="mt-0.5 text-[#99A3A3]">否定的</p>
+            <p className="text-base font-semibold text-gray-800">4%</p>
+            <p className="mt-0.5 text-gray-500">否定的</p>
           </div>
         </div>
 
@@ -255,8 +255,8 @@ export default function ProductPage() {
               onClick={() => setSelectedKeyword((current) => (current === tag ? null : tag))}
               className={`cursor-pointer rounded-full border px-2.5 py-1 text-xs font-medium transition ${
                 selectedKeyword === tag
-                  ? 'border-[#2eb6aa] bg-[#a5deda] text-[#00a699]'
-                  : 'border-[#ccd1d1] bg-[#f3f4f4] text-[#556666] hover:border-[#2eb6aa]'
+                  ? 'border-pink-400 bg-pink-100 text-pink-700'
+                  : 'border-pink-200 bg-white text-gray-700 hover:border-pink-400'
               }`}
               type="button"
             >
@@ -265,23 +265,23 @@ export default function ProductPage() {
           ))}
         </div>
 
-        <p className="rounded bg-[#f3f4f4] p-2 text-xs leading-relaxed text-[#556666]">
+        <p className="rounded bg-white p-2 text-xs leading-relaxed text-gray-700">
           {reviewSummaries[selectedKeyword] ?? reviewSummaries.default}
         </p>
 
-        <p className="mt-3 text-xs text-[#b8bfbf]">1,030件のレビューから集計</p>
+        <p className="mt-3 text-xs text-gray-400">1,030件のレビューから集計</p>
       </div>
 
-      <div className="bg-[#f3f4f4] px-4 py-4">
+      <div className="bg-white px-4 py-4">
         <div className="mb-4 flex items-center justify-between">
           <h3 className="text-sm font-semibold">
             クチコミ
-            {selectedKeyword && <span className="ml-2 text-xs text-[#99A3A3]">「{selectedKeyword}」でフィルタ中</span>}
+            {selectedKeyword && <span className="ml-2 text-xs text-gray-500">「{selectedKeyword}」でフィルタ中</span>}
           </h3>
           {selectedKeyword && (
             <button
               onClick={() => setSelectedKeyword(null)}
-              className="text-xs font-semibold text-[#2eb6aa] hover:text-[#00a699]"
+              className="text-xs font-semibold text-pink-600 hover:text-pink-700"
               type="button"
             >
               クリア
@@ -295,25 +295,25 @@ export default function ProductPage() {
               <div className="mb-2 flex items-start justify-between">
                 <div>
                   <p className="text-xs font-semibold">{review.name}</p>
-                  <p className="text-xs text-[#99A3A3]">
+                  <p className="text-xs text-gray-500">
                     {review.age}歳 / {review.skinType}
                   </p>
                 </div>
                 <div className="flex items-center gap-1">
                   {Array.from({ length: review.rating }).map((_, index) => (
-                    <Star key={`${review.name}-${index}`} size={12} className="fill-[#aa8800] text-[#aa8800]" />
+                    <Star key={`${review.name}-${index}`} size={12} className="fill-yellow-400 text-yellow-400" />
                   ))}
                 </div>
               </div>
-              <p className="mb-2 text-xs text-[#798989]">{review.text}</p>
+              <p className="mb-2 text-xs text-gray-600">{review.text}</p>
               <div className="mb-2 flex gap-2">
                 {review.keywords.map((keyword) => (
-                  <span key={`${review.name}-${keyword}`} className="rounded bg-[#ccd1d1] px-2 py-0.5 text-xs text-[#798989]">
+                  <span key={`${review.name}-${keyword}`} className="rounded bg-gray-100 px-2 py-0.5 text-xs text-gray-600">
                     #{keyword}
                   </span>
                 ))}
               </div>
-              <p className="text-xs text-[#b8bfbf]">{review.date}</p>
+              <p className="text-xs text-gray-400">{review.date}</p>
             </div>
           ))}
         </div>
