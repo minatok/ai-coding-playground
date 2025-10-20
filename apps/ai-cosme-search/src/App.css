@@ -402,7 +402,7 @@
 .product-image-small {
   width: 80px;
   height: 80px;
-  background: #f0f0f0;
+  background: transparent;
   border-radius: 10px;
   display: flex;
   align-items: center;
@@ -546,7 +546,7 @@
 .detail-image {
   width: 200px;
   height: 200px;
-  background: #f0f0f0;
+  background: transparent;
   border-radius: 15px;
   margin: 0 auto 15px;
   display: flex;
