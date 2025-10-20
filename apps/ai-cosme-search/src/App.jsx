@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './App.css';
 import productThumbnail from '../sunscreen.png';
-import recommendationImage from './assets/recommendation-product.png';
+import recommendationImage from './assets/recommendation-product.svg';
 
 const SCREENS = {
   SEARCH: 'screen0',
