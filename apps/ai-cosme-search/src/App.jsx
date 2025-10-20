@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import './App.css';
 import productThumbnail from '../sunscreen.png';
+import recommendationImage from './assets/recommendation-product.png';
 
 const SCREENS = {
   SEARCH: 'screen0',
@@ -465,7 +466,7 @@ export default function App() {
                 <div className="product-card-content">
                   <div className="product-header">
                     <div className="product-image-small">
-                      <img src={productThumbnail} alt={`${product.name} 商品画像`} />
+                      <img src={recommendationImage} alt={`${product.name} 商品画像`} />
                     </div>
                     <div className="product-details">
                       <div className="product-name">{product.name}</div>
@@ -526,7 +527,7 @@ export default function App() {
         <div className="content">
           <div className="detail-hero">
             <div className="detail-image">
-              <img src={productThumbnail} alt={`${DETAIL.name} 商品画像`} />
+              <img src={recommendationImage} alt={`${DETAIL.name} 商品画像`} />
             </div>
             <div className="detail-name">{DETAIL.name}</div>
             <div className="detail-price">{DETAIL.price}</div>

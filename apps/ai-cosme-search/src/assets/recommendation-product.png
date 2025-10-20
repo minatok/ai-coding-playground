@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="320" height="320" viewBox="0 0 320 320">
+  <defs>
+    <linearGradient id="bottle-body" x1="50%" x2="50%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#F4F7FB" />
+    </linearGradient>
+    <linearGradient id="bottle-cap" x1="0%" x2="0%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#F9DDBB" />
+      <stop offset="100%" stop-color="#E7AE6B" />
+    </linearGradient>
+    <linearGradient id="bottle-shadow" x1="50%" x2="50%" y1="0%" y2="100%">
+      <stop offset="0%" stop-color="#4F46E5" stop-opacity="0.08" />
+      <stop offset="100%" stop-color="#312E81" stop-opacity="0.1" />
+    </linearGradient>
+    <filter id="shadow" x="-30%" y="-30%" width="160%" height="160%">
+      <feGaussianBlur in="SourceAlpha" stdDeviation="8" result="blur" />
+      <feOffset dy="10" result="offsetBlur" />
+      <feComponentTransfer>
+        <feFuncA type="linear" slope="0.2" />
+      </feComponentTransfer>
+      <feMerge>
+        <feMergeNode in="offsetBlur" />
+        <feMergeNode in="SourceGraphic" />
+      </feMerge>
+    </filter>
+  </defs>
+  <g fill="none" stroke="none" stroke-width="1">
+    <ellipse cx="160" cy="232" rx="88" ry="32" fill="url(#bottle-shadow)" opacity="0.4" />
+    <g filter="url(#shadow)">
+      <rect x="88" y="98" width="144" height="120" rx="32" fill="url(#bottle-body)" />
+      <rect x="108" y="82" width="104" height="26" rx="13" fill="#E8ECF5" />
+      <rect x="124" y="58" width="72" height="34" rx="10" fill="url(#bottle-cap)" />
+      <rect x="124" y="130" width="72" height="12" rx="6" fill="#F9C062" opacity="0.8" />
+      <rect x="124" y="150" width="72" height="12" rx="6" fill="#F8D977" opacity="0.5" />
+      <rect x="124" y="170" width="72" height="12" rx="6" fill="#E5E7EB" />
+    </g>
+  </g>
+</svg>
