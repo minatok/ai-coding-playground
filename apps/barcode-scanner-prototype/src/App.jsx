@@ -290,6 +290,7 @@ const ProductDetailScreen = ({ product, onBack, onScanAgain }) => {
     </div>
   </div>
 );
+};
 
 const ErrorScreen = ({ errorType, onRetry, onHome }) => {
   const errorMessages = {
