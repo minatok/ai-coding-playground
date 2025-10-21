@@ -183,15 +183,15 @@ const ProductDetailScreen = ({ product, onBack, onScanAgain }) => {
           <button
             type="button"
             onClick={onBack}
-          className="mr-auto flex items-center text-[#2eb6aa] transition hover:text-blue-800"
-        >
-          <ArrowLeft className="mr-2 h-5 w-5" />
-          戻る
-        </button>
+            className="mr-auto flex items-center text-[#2eb6aa] transition hover:text-blue-800"
+          >
+            <ArrowLeft className="mr-2 h-5 w-5" />
+            戻る
+          </button>
+        </div>
       </div>
-    </div>
 
-    <div className="mx-auto max-w-2xl px-4 py-6">
+      <div className="mx-auto max-w-2xl px-4 py-6">
       <div className="mb-6 rounded-lg bg-white p-6 shadow">
         <div className="flex gap-6">
           <img src={product.image_url} alt={product.product_name} className="h-32 w-32 rounded-lg object-cover" />
