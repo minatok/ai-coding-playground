@@ -166,13 +166,23 @@ const LoadingScreen = () => (
   </div>
 );
 
-const ProductDetailScreen = ({ product, onBack, onScanAgain }) => (
-  <div className="min-h-screen bg-gray-50">
-    <div className="border-b bg-white">
-      <div className="mx-auto flex max-w-2xl items-center px-4 py-4">
-        <button
-          type="button"
-          onClick={onBack}
+const summarizeText = (text, length = 200) => {
+  if (text.length <= length) {
+    return text;
+  }
+  return `${text.slice(0, length).trim()}…`;
+};
+
+const ProductDetailScreen = ({ product, onBack, onScanAgain }) => {
+  const summaryExcerpt = summarizeText(product.summary);
+
+  return (
+    <div className="min-h-screen bg-gray-50">
+      <div className="border-b bg-white">
+        <div className="mx-auto flex max-w-2xl items-center px-4 py-4">
+          <button
+            type="button"
+            onClick={onBack}
           className="mr-auto flex items-center text-[#2eb6aa] transition hover:text-blue-800"
         >
           <ArrowLeft className="mr-2 h-5 w-5" />
@@ -194,9 +204,16 @@ const ProductDetailScreen = ({ product, onBack, onScanAgain }) => (
         </div>
       </div>
 
-      <div className="mb-6 rounded-2xl border border-[#d9dddd] bg-[#dbf1f0] p-6">
+      <div className="mb-6 rounded-lg border border-[#d9dddd] bg-[#dbf1f0] p-6">
         <h2 className="mb-4 text-xl font-bold text-[#233838]">クチコミの傾向</h2>
-        <div className="mb-5 flex gap-6 text-sm text-[#556666]">
+        <div className="mb-4 flex items-baseline gap-2 text-[#556666]">
+          <div className="text-3xl font-bold text-[#233838]">{product.rating.score}</div>
+          <div className="text-xl" aria-hidden>
+            ⭐
+          </div>
+          <p className="text-sm text-[#99A3A3]">（{product.rating.count}件のレビューから生成）</p>
+        </div>
+        <div className="mb-4 flex gap-6 text-sm text-[#556666]">
           <div className="text-center">
             <p className="text-2xl font-bold text-[#233838]">88%</p>
             <p>肯定的</p>
@@ -218,7 +235,7 @@ const ProductDetailScreen = ({ product, onBack, onScanAgain }) => (
           ))}
         </div>
         <div className="rounded-lg bg-white p-4 text-sm leading-relaxed text-[#556666]">
-          {product.summary}
+          {summaryExcerpt}
         </div>
         <p className="mt-3 text-xs text-[#99A3A3]">（{product.rating.count}件のレビューから集計）</p>
       </div>
