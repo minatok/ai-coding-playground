@@ -1,0 +1,19 @@
+<svg width="384" height="384" viewBox="0 0 384 384" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="38" y1="36" x2="346" y2="348" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#7B153E"/>
+      <stop offset="0.52" stop-color="#A0324D"/>
+      <stop offset="1" stop-color="#2A7AA1"/>
+    </linearGradient>
+    <linearGradient id="glow" x1="0" y1="0" x2="0" y2="1">
+      <stop stop-color="rgba(255,255,255,0.55)" offset="0"/>
+      <stop stop-color="rgba(255,255,255,0)" offset="1"/>
+    </linearGradient>
+  </defs>
+  <rect width="384" height="384" rx="24" fill="url(#bg)"/>
+  <rect width="384" height="384" rx="24" fill="url(#glow)" fill-opacity="0.35"/>
+  <text x="192" y="116" text-anchor="middle" font-family="Futura, 'Noto Sans JP', sans-serif" font-weight="700" font-size="44" letter-spacing="0.08em" fill="#FFFFFF">WINTER SALE</text>
+  <text x="192" y="195" text-anchor="middle" font-family="'Noto Sans JP', sans-serif" font-weight="800" font-size="64" fill="#FFFFFF">最大50%OFF</text>
+  <text x="192" y="240" text-anchor="middle" font-family="'Noto Sans JP', sans-serif" font-weight="500" font-size="28" fill="#F0F9FF">冬の限定アイテム</text>
+  <text x="192" y="305" text-anchor="middle" font-family="'Noto Sans JP', sans-serif" font-weight="400" font-size="20" fill="#E0F2FF">人気ブランドのスペシャルボックス</text>
+</svg>
